@@ -1,67 +1,34 @@
-# Jupyter-env
+### Jupyter-env
 
-# 0 - Set-up package source
+#### 0 - Set-up package source
 sudo apt-get update
 sudo apt-get upgrade
 
-# 1 - Install python and all dependencies
+#### 1 - Install python and all dependencies
+```sh
+# Download Anaconda
 wget https://3230d63b5fc54e62148e-c95ac804525aac4b6dba79b00b39d1d3.ssl.cf1.rackcdn.com/Anaconda2-4.0.0-Linux-x86_64.sh
+
+# Install Anacondo
 bash Anaconda2-4.0.0-Linux-x86_64.sh
+
+# Add Anaconda path to paht
 export PATH="/home/gamboabdoulraouf/anaconda2/bin:$PATH"
 
-#sudo apt-get install build-essential libxml2-dev libssl-dev libffi-dev python-dev libxslt-dev
 #close and reopen the terminal
 
-# A-Ipython notebook
-# 3 - On install Ipython
-sudo apt-get install python-pip
-sudo pip install "jupyter[notebook]"
-
-# Prepare a hashed password
-$ python
->>> from IPython.lib import passwd
-passwd()
-# Enter password:
-# Verify password:
-# You get something like this: 'sha1:3820a75317b6:dca2a273323078fcc532094784e3d6a23b5ec8f7'
->>> # Ctrl + D to leave python
-
-# Create and add SSL certificat, so that your password is not sent unencrypted by your browser
-$ openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout mycert.pem -out mycert.pem
-$ jupyter notebook --certfile=mycert.pem
-
-
-# Create a profil to using ipython
-$ ipython profile create abdoul
-
-$ nano /home/gamboabdoulraouf/.jupyter/jupyter_notebook_config.py
-
-# Add the following code in ipython_notebook_config.py
-c = get_config()
-
-# Kernel config
-c.IPKernelApp.pylab = 'inline'  # if you want plotting support always
-
-# Notebook config
-c.NotebookApp.certfile = u'/home/abdoul/mycert.pem'
-c.NotebookApp.ip = '*'
-c.NotebookApp.open_browser = False
-c.NotebookApp.password = u'sha1:3c82442d66a4:ecfe4df7266af02286c2907801da2acab07346bd'
-# It is a good idea to put it on a known, fixed port
-c.NotebookApp.port = 9999
-
-jupyter notebook
-
-# You can start ipython on your browser
-https://IP or your.host.com:9999
-
-
-# B- Jupyter 
-# Install pip3 and other dependencies
+  ```
+  
+#### 2- Jupyter configuration 
+##### 2-1- Install pip3 and other dependencies
+```sh
 sudo apt-get -y install python3-pip npm nodejs-legacy
 sudo npm install -g configurable-http-proxy
 
-# Install JupyterHub and Jupyter for python 3 kernel
+```
+
+##### 2-2- Install JupyterHub and Jupyter for python 3 kernel
+```sh
 sudo pip3 install jupyterhub
 sudo pip3 install "ipython[notebook]"
 sudo apt-get -y install python-dev python-setuptools
@@ -69,18 +36,28 @@ sudo apt-get install python-pip python-dev build-essential
 sudo pip install py4j
 sudo pip install "ipython[notebook]"
 
-# create configuration file 
-#jupyterhub --generate-config.py
-jupyterhub --generate-config -f /home/gamboabdoulraouf/jupyterhub_config.py
+```
 
-# Create and add SSL certificat, so that your password is not sent unencrypted by your browser
+##### 2-3- create configuration file 
+```sh
+jupyterhub --generate-config -f /home/gamboabdoulraouf/jupyterhub_config.py
+```
+
+##### 2-3- Create and add SSL certificat, so that your password is not sent unencrypted by your browser
+```sh
 openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -nodes -days 365
 
-# create cookie secret
+```
+
+##### 2-4- create cookie secret
+```sh
 openssl rand -base64 2048 > /home/gamboabdoulraouf/cookie_secret
 sudo chmod a-srwx /home/gamboabdoulraouf/cookie_secret
 
-# create auth token
+```
+
+##### 2-5- create auth token
+```sh
 openssl rand -hex 32 > /home/gamboabdoulraouf/proxi_auth_token
 
 sudo touch /var/log/jupyterhub.log
@@ -105,8 +82,9 @@ c.Authenticator.whitelist = {'test'}
 c.Authenticator.admin_users = {'test'}
 """
 
+```
 
-# Setup Spark kernel
+##### 2-6- Setup Spark kernel
 sudo mkdir -p /usr/local/share/jupyter/kernels/pyspark/
 cat <<EOF | sudo tee /usr/local/share/jupyter/kernels/pyspark/kernel.json
 {
@@ -128,8 +106,10 @@ cat <<EOF | sudo tee /usr/local/share/jupyter/kernels/pyspark/kernel.json
 }
 EOF
 
-# Setup Python 2.7 kernel
+##### 2-7- Setup Python 2.7 kernel
+```sh
 sudo mkdir -p /usr/local/share/jupyter/kernels/python2.7/
+
 cat <<EOF | sudo tee /usr/local/share/jupyter/kernels/python2.7/kernel.json
 {"display_name": "Python 2", 
 "language": "python", 
@@ -142,8 +122,10 @@ cat <<EOF | sudo tee /usr/local/share/jupyter/kernels/python2.7/kernel.json
 }
 EOF
 
+```
 
-# Setup R kernel
+#### 2-8- Setup R kernel
+```sh
 conda install -c r r-essentials
 
 sudo mkdir -p /usr/local/share/jupyter/kernels/r/
@@ -161,31 +143,15 @@ cat <<EOF | sudo tee /usr/local/share/jupyter/kernels/r/kernel.json
 }
 EOF
 
+```
 
-# Run Jupyter
+##### 2-9- Run Jupyter
+```sh
 sudo jupyterhub -f /home/gamboabdoulraouf/jupyterhub_config.py
+
 nohup sudo jupyterhub -f /home/gamboabdoulraouf/jupyterhub_config.py &
 
+```
 
-# Go to https://IP or your.host.com
+# Go to https://IP or your.host.com and enjoy!
 
-
-4] Create user home directory in HDFS
-The next step is to create a directory structure in HDFS for the new user.
-For that from the admin user, create a directory structure.
-
-$ hadoop dfs –mkdir /user/username/
-
-[5] Change the ownership of user home directory in HDFS
-The ownership of the newly created directory structure is with superuser.With this new user will not be able to run mapreduce programs. So change the ownership of newly created directory in HDFS to the new user.
-
-$ hadoop dfs –chown –R username:groupname /user/test
-
-echo "coucou" > fichier.txt
-hadoop fs -copyFromLocal fichier.txt /user/test/
-
-text_file = sc.textFile("hdfs:///user/test/fichier.txt")
-counts = text_file.flatMap(lambda line: line.split(" ")) \
-             .map(lambda word: (word, 1)) \
-             .reduceByKey(lambda a, b: a + b)
-counts.saveAsTextFile("hdfs://results.txt")
