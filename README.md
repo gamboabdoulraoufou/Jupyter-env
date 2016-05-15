@@ -19,7 +19,7 @@ export PATH="/home/gamboabdoulraouf/anaconda2/bin:$PATH"
 
   ```
   
-#### 2- Jupyter configuration 
+#### 2- Install Jupyter 
 ##### 2-1- Install pip3 and other dependencies
 ```sh
 sudo apt-get -y install python3-pip npm nodejs-legacy
@@ -38,31 +38,44 @@ sudo pip install "ipython[notebook]"
 
 ```
 
-##### 2-3- create configuration file 
+#### 3- Configure Jupyter 
+##### 3-1- Create Jupyter configuration file
 ```sh
 jupyterhub --generate-config -f /home/gamboabdoulraouf/jupyterhub_config.py
+
 ```
 
-##### 2-3- Create and add SSL certificat, so that your password is not sent unencrypted by your browser
+##### 3-2- Create and add SSL certificat, so that your password is not sent unencrypted by your browser
 ```sh
 openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -nodes -days 365
 
 ```
 
-##### 2-4- create cookie secret
+##### 3-3- Create cookie secret
 ```sh
 openssl rand -base64 2048 > /home/gamboabdoulraouf/cookie_secret
 sudo chmod a-srwx /home/gamboabdoulraouf/cookie_secret
 
 ```
 
-##### 2-5- create auth token
+##### 3-4- Create auth token
 ```sh
 openssl rand -hex 32 > /home/gamboabdoulraouf/proxi_auth_token
 
+```
+
+##### 3-5- Create auth token
+```sh
 sudo touch /var/log/jupyterhub.log
 
-"""
+```
+
+##### 3-6- Change Jupyter configuration
+```sh
+# Edit configuration file
+/home/gamboabdoulraouf/jupyterhub_config.py
+
+# Add the content below in configugation file
 c = get_config()
 # IP and Port
 c.JupyterHub.ip = '10.19.0.0' # IP local
@@ -80,12 +93,15 @@ c.JupyterHub.extra_log_file = '/var/log/jupyterhub.log'
 # specify users and admin
 c.Authenticator.whitelist = {'test'}
 c.Authenticator.admin_users = {'test'}
-"""
 
 ```
 
-##### 2-6- Setup Spark kernel
+#### 4- Setup Spark kernel
+```sh
+# Create folder for Spark Kernel
 sudo mkdir -p /usr/local/share/jupyter/kernels/pyspark/
+
+# Create and add configuration information json file
 cat <<EOF | sudo tee /usr/local/share/jupyter/kernels/pyspark/kernel.json
 {
  "display_name": "PySpark",
@@ -106,10 +122,14 @@ cat <<EOF | sudo tee /usr/local/share/jupyter/kernels/pyspark/kernel.json
 }
 EOF
 
-##### 2-7- Setup Python 2.7 kernel
+```
+
+#### 5- Setup Python 2.7 kernel
 ```sh
+# Create folder for Python 2 Kernel
 sudo mkdir -p /usr/local/share/jupyter/kernels/python2.7/
 
+# Create and add configuration information json file
 cat <<EOF | sudo tee /usr/local/share/jupyter/kernels/python2.7/kernel.json
 {"display_name": "Python 2", 
 "language": "python", 
@@ -124,11 +144,15 @@ EOF
 
 ```
 
-#### 2-8- Setup R kernel
+#### 6- Setup R kernel
 ```sh
+# Install R
 conda install -c r r-essentials
 
+# Create folder for R kernel
 sudo mkdir -p /usr/local/share/jupyter/kernels/r/
+
+# Create and add configuration information json file
 cat <<EOF | sudo tee /usr/local/share/jupyter/kernels/r/kernel.json
 {
   "argv": [
@@ -145,13 +169,15 @@ EOF
 
 ```
 
-##### 2-9- Run Jupyter
+#### 7- Run Jupyter
 ```sh
+# Launch Jupyter server
 sudo jupyterhub -f /home/gamboabdoulraouf/jupyterhub_config.py
 
+# Or
 nohup sudo jupyterhub -f /home/gamboabdoulraouf/jupyterhub_config.py &
 
 ```
 
-# Go to https://IP or your.host.com and enjoy!
+__Go to https://IP or your.host.com and enjoy!__
 
