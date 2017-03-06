@@ -182,10 +182,10 @@ EOF
 #### 7- Run Jupyter
 ```sh
 # Launch Jupyter server
-sudo jupyterhub -f /home/gamboabdoulraouf/jupyterhub_config.py
+sudo /usr/bin/python3.5 -m jupyterhub -f /home/gamboabdoulraouf/jupyterhub_config.py
 
 # Or
-nohup sudo jupyterhub -f /home/gamboabdoulraouf/jupyterhub_config.py &
+nohup sudo /usr/bin/python3.5 -m jupyterhub -f /home/gamboabdoulraouf/jupyterhub_config.py &
 
 ```
 
