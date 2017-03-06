@@ -22,15 +22,25 @@ export PATH="/home/gamboabdoulraouf/anaconda2/bin:$PATH"
 #### 2- Install Jupyter 
 ##### 2-1- Install pip3 and other dependencies
 ```sh
-sudo apt-get -y install python3-pip npm nodejs-legacy
+sudo add-apt-repository ppa:fkrull/deadsnakes
+sudo apt-get update
+sudo apt-get install python3.5
+
+wget https://bootstrap.pypa.io/get-pip.py
+
+chmod 777 get-pip.py
+
+sudo /usr/bin/python3.5 get-pip.py
+
+sudo apt-get install npm nodejs-legacy
 sudo npm install -g configurable-http-proxy
 
 ```
 
 ##### 2-2- Install JupyterHub and Jupyter for python 3 kernel
 ```sh
-sudo pip3 install jupyterhub
-sudo pip3 install "ipython[notebook]"
+sudo /usr/bin/python3.5 -m pip install jupyterhub
+sudo /usr/bin/python3.5 -m pip install "ipython[notebook]"
 sudo apt-get -y install python-dev python-setuptools
 sudo apt-get install python-pip python-dev build-essential
 sudo pip install py4j
